@@ -1,36 +1,30 @@
 import express from "express";
 import cors from "cors";
+import { connectDB, db } from "./db";
 
 const app = express();
 
 app.use(cors());
+app.use(express.json());
 
-const comments = [
-  {
-    id: "1",
-    streamId: "1",
-    message: "What a shot!",
-  },
-  {
-    id: "2",
-    streamId: "1",
-    message: "Six runs!",
-  },
-  {
-    id: "3",
-    streamId: "2",
-    message: "Nice goal!",
-  },
-];
+async function bootstrap() {
+  await connectDB();
 
-app.get("/comments/:streamId", (req, res) => {
-  const streamComments = comments.filter(
-    (c) => c.streamId === req.params.streamId,
-  );
+  const commentsCollection = db.collection("comments");
 
-  res.json(streamComments);
-});
+  app.get("/comments/:streamId", async (req, res) => {
+    const comments = await commentsCollection
+      .find({
+        streamId: req.params.streamId,
+      })
+      .toArray();
 
-app.listen(5003, () => {
-  console.log("🚀 Comment Service running on http://localhost:5003");
-});
+    res.json(comments);
+  });
+
+  app.listen(5003, () => {
+    console.log("🚀 Comment Service running on http://localhost:5003");
+  });
+}
+
+bootstrap();

@@ -15,7 +15,6 @@ const typeDefs = `#graphql
   title: String!
   status: String!
   viewerCount: Int!
-    comments: [Comment!]!
   },
 
    type Query {
@@ -23,7 +22,6 @@ const typeDefs = `#graphql
     stream(id: ID!): Stream
   }
 `;
-//
 
 const resolvers = {
   Query: {

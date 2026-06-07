@@ -4,15 +4,17 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-     "dev": "ts-node-dev --respawn src/server.ts",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "ts-node-dev --respawn src/server.ts",
+    "seed": "ts-node-dev src/seed.ts"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
     "cors": "^2.8.6",
-    "express": "^5.2.1"
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "mongodb": "^7.2.0"
   },
   "devDependencies": {
     "@types/express": "^5.0.6",

@@ -1,32 +1,39 @@
 import express from "express";
 import cors from "cors";
+import { connectDB, db } from "./db";
 
 const app = express();
 
 app.use(cors());
+app.use(express.json());
 
-const viewers = [
-  {
-    streamId: "1",
-    viewerCount: 128,
-  },
-  {
-    streamId: "2",
-    viewerCount: 43,
-  },
-];
+async function bootstrap() {
+  await connectDB();
 
-app.get("/viewers/:streamId", (req, res) => {
-  const viewer = viewers.find((v) => v.streamId === req.params.streamId);
+  const viewersCollection = db.collection("viewers");
 
-  if (!viewer) {
-    return res.status(404).json({
-      message: "Viewer data not found",
+  app.get("/viewers", async (req, res) => {
+    const viewers = await viewersCollection.find().toArray();
+    res.json(viewers);
+  });
+
+  app.get("/viewers/:streamId", async (req, res) => {
+    const viewer = await viewersCollection.findOne({
+      streamId: req.params.streamId,
     });
-  }
 
-  res.json(viewer);
-});
-app.listen(5002, () => {
-  console.log("🚀 Viewer Service running on http://localhost:5002");
-});
+    if (!viewer) {
+      return res.status(404).json({
+        message: "Viewer data not found",
+      });
+    }
+
+    res.json(viewer);
+  });
+
+  app.listen(5002, () => {
+    console.log("🚀 Viewer Service running on http://localhost:5002");
+  });
+}
+
+bootstrap();

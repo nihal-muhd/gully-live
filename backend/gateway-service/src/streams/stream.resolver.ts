@@ -3,6 +3,8 @@ import axios from "axios";
 export const streamResolvers = {
   Query: {
     streams: async () => {
+      console.log("checkingggg");
+
       const [streamResponse, viewerResponse] = await Promise.all([
         axios.get("http://localhost:5001/streams"),
         axios.get("http://localhost:5002/viewers"),
@@ -10,6 +12,9 @@ export const streamResolvers = {
 
       const streams = streamResponse.data;
       const viewers = viewerResponse.data;
+
+      console.log(streams, "ddd");
+      console.log(viewers, "ere");
 
       return streams.map((stream: any) => {
         const viewer = viewers.find((v: any) => v.streamId === stream.id);
